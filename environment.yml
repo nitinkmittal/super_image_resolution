@@ -1,0 +1,31 @@
+name: super_image_resolution
+channels:
+  - conda-forge
+dependencies:
+  - black=21.4b0
+  - pydicom
+  - ipykernel=5.5.3
+  - isort=5.8.0
+  - jupyterlab=3.0.12
+  - matplotlib=3.3.4
+  # - nodejs=15.14.0
+  - numpy=1.19.2
+  - pandas=1.2.3
+  - pandera
+  - pip=21.0.1
+  - python=3.9.2
+  - pylint=2.7.2
+  - pycodestyle=2.7.0
+  - pydocstyle=6.0.0
+  - scikit-learn=0.23.2
+  - seaborn=0.11.1
+  - typing=3.7.4.3
+  - tqdm=4.60.0
+  - pip:
+      - ipywidgets==7.6.3
+      # - jupyter-server-proxy==3.0.2
+      - lxml==4.6.3
+      - pickle-mixin==1.0.2  
+      - torch==1.8.1
+      - torchvision==0.9.1
+      # - tensorboard==2.5.0
