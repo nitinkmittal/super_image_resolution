@@ -1,3 +1,4 @@
+"""Init module."""
 from pathlib import Path, PosixPath
 
 

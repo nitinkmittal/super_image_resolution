@@ -1,3 +1,4 @@
+"""Contains custom Pytorch styled datasets."""
 import os
 from pathlib import PosixPath
 from typing import List, Tuple, Union
@@ -20,8 +21,8 @@ class CustomDataset(Dataset):
         self.in_transforms = in_transforms
         self.out_transforms = out_transforms
 
-    def __len__(self):
-        return len(os.listdir(self.paths))
+    def __len__(self) -> int:
+        return len(self.paths)
 
     def __getitem__(self, idx) -> Tuple[Tensor, Tensor]:
         img = Image.open(self.paths[idx])

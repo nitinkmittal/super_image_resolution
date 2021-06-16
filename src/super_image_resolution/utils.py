@@ -31,8 +31,7 @@ def split_train_val(
         assert num_train < len(os.listdir(path))
     else:
         raise ValueError(
-            f"Expected num_train to be of type int or float,"
-            f"got {type(num_train)}"
+            f"Expected num_train to be of type int or float," f"got {type(num_train)}"
         )
 
     np.random.seed(seed)
@@ -105,7 +104,7 @@ def find_latest_model_version(path: Union[str, PosixPath]) -> int:
 def compute2d_means_and_stds(
     num_channels: int, data_loader
 ) -> Tuple[Tuple[Tensor, Tensor], Tuple[Tensor, Tensor]]:
-    """Compute means and stds for 2d images."""
+    """Compute means and stds for multi-channel 2d images."""
     means_in = torch.zeros(num_channels)
     stds_in = torch.zeros(num_channels)
     pixels_in = 0
@@ -165,11 +164,27 @@ def save_output(
     in_: Union[Tensor, List[Tensor]],
     out_true: Union[Tensor, List[Tensor]],
     out_pred: Union[Tensor, List[Tensor]],
-    fp,
+    fp: Union[str, PosixPath],
     max_save: int = None,
     random_save: bool = True,
 ):
-    """To save images."""
+    """
+    Save images as PNGs.
+
+    Parameters
+    ----------
+    in_: input to model
+
+    out_true: ground truth output
+
+    out_pred: predicted output by model
+
+    fp: filename
+
+    max_save: maximum images to be saved
+
+    random_save: to save random images
+    """
     assert len(out_true) == len(out_pred)
     idxs = np.arange(len(out_true))
     if random_save:
