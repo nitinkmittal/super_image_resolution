@@ -1,15 +1,14 @@
 """Contains utility functions."""
 import os
+import pickle as pk
 from pathlib import PosixPath
 from typing import List, Sequence, Tuple, Union
 
 import numpy as np
-from tqdm import tqdm
-
 import torch
 from torch import Tensor
-import pickle as pk
 from torchvision.utils import save_image
+from tqdm import tqdm
 
 
 def split_train_val(

@@ -6,7 +6,12 @@ import torch.nn.functional as F
 from torch import Tensor
 
 activations = nn.ModuleDict(
-    [["relu", nn.ReLU()], ["lrelu", nn.LeakyReLU()], ["tanh", nn.Tanh()]]
+    [
+        ["relu", nn.ReLU()],
+        ["lrelu", nn.LeakyReLU()],
+        ["tanh", nn.Tanh()],
+        ["identity", nn.Identity(requires_grad=False)],
+    ]
 )
 
 
@@ -140,6 +145,7 @@ class UNet(nn.Module):
         out_channels: int,
         norm: str = "identity",
         act: str = "relu",
+        final_act: str = "tanh",
     ):
         super().__init__()
 
@@ -153,7 +159,7 @@ class UNet(nn.Module):
                 stride=1,
                 padding=0,
             ),
-            nn.Tanh(),
+            activations[final_act],
         )
 
     def forward(self, x) -> Tensor:

@@ -1,10 +1,9 @@
-"""Contains custom Pytorch styled datasets."""
+"""Contain PyTorch style dataset functions."""
 import os
 from pathlib import PosixPath
 from typing import List, Tuple, Union
 
 from PIL import Image
-
 from torch import Tensor
 from torch.utils.data import Dataset
 from torchvision.transforms import Compose
@@ -17,6 +16,15 @@ class CustomDataset(Dataset):
         in_transforms: Compose,
         out_transforms: Compose,
     ):
+        """
+        Parameters
+        ----------
+        paths: path to dataset
+
+        in_transforms: transforms for model input
+
+        out_transforms: transforms for model output
+        """
         self.paths = paths
         self.in_transforms = in_transforms
         self.out_transforms = out_transforms
