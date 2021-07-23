@@ -82,9 +82,13 @@ def make_dirs(path: Union[str, PosixPath], verbose: bool = True):
         if verbose:
             print(f"{path} already exists")
     else:
-        os.makedirs(path, exist_ok=True)
-        if verbose:
-            print(f"Created path {path}")
+        try:
+            os.makedirs(path, exist_ok=True)
+        except Exception as e:
+            print(f"Exception: {e} while creating {path}")
+        else:
+            if verbose:
+                print(f"Created directory {path}")
 
 
 def find_latest_model_version(path: Union[str, PosixPath]) -> int:
@@ -203,3 +207,30 @@ def save_output(
             fp=f"{fp}_sample_{i}.png",
             normalize=True,
         )
+
+
+def find_files(path: str, ext: str, recursive: bool = True) -> List[str]:
+    """Search and return files with extension."""
+    abs_paths = []
+    ext = ext.replace(".", "")
+
+    def does_file_ext_match(path):
+        fp = os.path.basename(path)
+        if fp.split(".")[1] == ext:
+            return True
+        return False
+
+    def recursive_search(path):
+        if os.path.isfile(path) and does_file_ext_match(path):
+            abs_paths.append(path)
+        if os.path.isdir(path):
+            for content in os.listdir(path):
+                recursive_search(os.path.join(path, content))
+
+    if recursive:
+        recursive_search(path)
+    else:
+        if os.path.isfile(path) and does_file_ext_match(path):
+            abs_paths.append(path)
+
+    return list(set(abs_paths))
