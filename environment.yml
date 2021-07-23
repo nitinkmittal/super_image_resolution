@@ -3,15 +3,15 @@ channels:
   - conda-forge
 dependencies:
   - black=21.4b0
-  - pydicom
-  - ipykernel=5.5.3
+  - pydicom=2.1.2
+  - ipykernel=6.0.2
   - isort=5.8.0
-  - jupyterlab=3.0.12
+  - jupyterlab=3.0.16
   - matplotlib=3.3.4
   # - nodejs=15.14.0
   - numpy=1.19.2
   - pandas=1.2.3
-  - pandera
+  - pandera=0.6.5
   - pip=21.0.1
   - python=3.9.2
   - pylint=2.7.2
@@ -26,8 +26,10 @@ dependencies:
       # - jupyter-server-proxy==3.0.2
       - lxml==4.6.3
       - pickle-mixin==1.0.2
-      - scikit-image
-      - slideio
+      - pyunpack==0.2.2
+      - patool
+      - scikit-image==0.18.2
+      - slideio==0.5.225
       - SSIM-PIL
       - torch==1.8.1
       - torchvision==0.9.1
