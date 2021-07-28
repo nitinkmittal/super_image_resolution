@@ -4,25 +4,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-
-activations = nn.ModuleDict(
-    [
-        ["relu", nn.ReLU()],
-        ["lrelu", nn.LeakyReLU()],
-        ["tanh", nn.Tanh()],
-        ["identity", nn.Identity(requires_grad=False)],
-    ]
-)
-
-
-def norm2d(norm: str, num_features: int):
-    return nn.ModuleDict(
-        [
-            ["identity", nn.Identity(require_grad=False)],
-            ["batchnorm", nn.BatchNorm2d(num_features=num_features)],
-            ["instancenorm", nn.InstanceNorm2d(num_features=num_features)],
-        ]
-    )[norm]
+from .modules import norm2d, activations
 
 
 class DoubleConv2d(nn.Module):
@@ -31,7 +13,7 @@ class DoubleConv2d(nn.Module):
         in_channels: int,
         out_channels: int,
         norm: str = "identity",
-        act: str = "relu",
+        activation: str = "relu",
     ):
         super().__init__()
         self.down = nn.Sequential(
@@ -43,7 +25,7 @@ class DoubleConv2d(nn.Module):
                 padding_mode="zeros",
             ),
             norm2d(norm, num_features=out_channels),
-            activations[act],
+            activations[activation],
             nn.Conv2d(
                 in_channels=out_channels,
                 out_channels=out_channels,
@@ -52,7 +34,7 @@ class DoubleConv2d(nn.Module):
                 padding_mode="zeros",
             ),
             norm2d(norm, num_features=out_channels),
-            activations[act],
+            activations[activation],
         )
 
     def forward(self, x: Tensor) -> Tensor:
@@ -60,20 +42,33 @@ class DoubleConv2d(nn.Module):
 
 
 class UNetEncoder(nn.Module):
-    def __init__(self, in_channels: int, norm: str = "identity", act: str = "relu"):
+    def __init__(
+        self, in_channels: int, norm: str = "identity", activation: str = "relu"
+    ):
         super().__init__()
         self.downs = nn.ModuleList()
         self.downs.append(
-            DoubleConv2d(in_channels=in_channels, out_channels=64, norm=norm, act=act)
+            DoubleConv2d(
+                in_channels=in_channels,
+                out_channels=64,
+                norm=norm,
+                activation=activation,
+            )
         )
         self.downs.append(
-            DoubleConv2d(in_channels=64, out_channels=128, norm=norm, act=act)
+            DoubleConv2d(
+                in_channels=64, out_channels=128, norm=norm, activation=activation
+            )
         )
         self.downs.append(
-            DoubleConv2d(in_channels=128, out_channels=256, norm=norm, act=act)
+            DoubleConv2d(
+                in_channels=128, out_channels=256, norm=norm, activation=activation
+            )
         )
         self.downs.append(
-            DoubleConv2d(in_channels=256, out_channels=512, norm=norm, act=act)
+            DoubleConv2d(
+                in_channels=256, out_channels=512, norm=norm, activation=activation
+            )
         )
         self.depth = len(self.downs)
 
@@ -94,7 +89,7 @@ class UpSample(nn.Module):
         in_channels: int,
         out_channels: int,
         norm: str = "identity",
-        act: str = "relu",
+        activation: str = "relu",
     ):
         super().__init__()
         self.up = nn.ModuleList(
@@ -110,7 +105,7 @@ class UpSample(nn.Module):
                     in_channels=in_channels,
                     out_channels=out_channels,
                     norm=norm,
-                    act=act,
+                    activation=activation,
                 ),
             ]
         )
@@ -122,13 +117,23 @@ class UpSample(nn.Module):
 
 
 class UNetDecoder(nn.Module):
-    def __init__(self, norm="identity", act="relu"):
+    def __init__(self, norm="identity", activation="relu"):
         super().__init__()
 
         self.ups = nn.ModuleList()
-        self.ups.append(UpSample(in_channels=512, out_channels=256, norm=norm, act=act))
-        self.ups.append(UpSample(in_channels=256, out_channels=128, norm=norm, act=act))
-        self.ups.append(UpSample(in_channels=128, out_channels=64, norm=norm, act=act))
+        self.ups.append(
+            UpSample(
+                in_channels=512, out_channels=256, norm=norm, activation=activation
+            )
+        )
+        self.ups.append(
+            UpSample(
+                in_channels=256, out_channels=128, norm=norm, activation=activation
+            )
+        )
+        self.ups.append(
+            UpSample(in_channels=128, out_channels=64, norm=norm, activation=activation)
+        )
         self.depth = len(self.ups)
 
     def forward(self, x1: Tensor, x2: List[Tensor]) -> torch.Tensor:
@@ -144,13 +149,15 @@ class UNet(nn.Module):
         in_channels: int,
         out_channels: int,
         norm: str = "identity",
-        act: str = "relu",
+        activation: str = "relu",
         final_act: str = "tanh",
     ):
         super().__init__()
 
-        self.encoder = UNetEncoder(in_channels=in_channels, norm=norm, act=act)
-        self.decoder = UNetDecoder(norm=norm, act=act)
+        self.encoder = UNetEncoder(
+            in_channels=in_channels, norm=norm, activation=activation
+        )
+        self.decoder = UNetDecoder(norm=norm, activation=activation)
         self.out = nn.Sequential(
             nn.Conv2d(
                 in_channels=64,
