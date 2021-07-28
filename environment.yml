@@ -33,4 +33,6 @@ dependencies:
       - SSIM-PIL
       - torch==1.8.1
       - torchvision==0.9.1
+      - pytorch-lightning
+  
       # - tensorboard==2.5.0
