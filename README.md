@@ -21,3 +21,31 @@ faces dataset from Kaggle](https://www.kaggle.com/jeffheaton/glasses-or-no-glass
 phase-2, the project will target to provide deep learning models to perform super-resolution of breast cancer
 histology images. For this, the project will use the BACH dataset from ICIAR 2018 grand challenge which
 contains nearly 400 H&E stained breast histology microscopy images.
+
+## Sampling from WSI
+```bash{python}
+python generate_samples.py <svs> <samples_dir>
+
+python generate_samples.py --help
+
+usage: generate_samples.py [-h] -svs SVS -samples_dir SAMPLES_DIR [-recursive_svs_search RECURSIVE_SVS_SEARCH] [-create_samples_dir CREATE_SAMPLES_DIR] [-num_samples_per_svs NUM_SAMPLES_PER_SVS] [-sample_size SAMPLE_SIZE]
+                           [-max_attempt_per_sample MAX_ATTEMPT_PER_SAMPLE]
+
+Run random sampling over svs files and save samples
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -svs SVS              path to svs file/s or directory containing svs file/s
+  -samples_dir SAMPLES_DIR
+                        path to directory to store samples
+  -recursive_svs_search RECURSIVE_SVS_SEARCH
+                        recursively search for svs files
+  -create_samples_dir CREATE_SAMPLES_DIR
+                        create directory to store samples
+  -num_samples_per_svs NUM_SAMPLES_PER_SVS
+                        number of samples per SVS file
+  -sample_size SAMPLE_SIZE
+                        dimension for each sample
+  -max_attempt_per_sample MAX_ATTEMPT_PER_SAMPLE
+                        Maximum number of attempts per sample
+```
