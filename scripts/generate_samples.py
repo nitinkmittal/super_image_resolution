@@ -5,6 +5,8 @@ from super_image_resolution.sampler import RandomSampler, BaseSampleCondition
 import numpy as np
 
 from torchvision.transforms import ToPILImage
+from tqdm import tqdm
+from time import time
 
 
 def check_if_file_dir(fp: str) -> bool:
@@ -104,7 +106,8 @@ max_attempt_per_sample = args.max_attempt_per_sample
 
 if os.path.isdir(svs) and not recursive_svs_search:
     raise ValueError(
-        f"{svs} is a directory, " "try setting -recursive_svs_search flag to True."
+        f"{svs} is a directory, "
+        "try setting -recursive_svs_search flag to True."
     )
 svs_files = find_files(svs, ext="svs", recursive=recursive_svs_search)
 
@@ -132,8 +135,11 @@ class SampleCondition(BaseSampleCondition):
 
 
 sample_cond = SampleCondition()
-
-for i, svs in enumerate(svs_files):
+t = tqdm(svs_files, leave=False, position=0)
+start_time = time()
+num_samples = 0
+for svs in t:
+    t.set_description(f"Sampling from {svs}")
     sampler = RandomSampler(
         svs,
         scene_no=0,
@@ -145,10 +151,19 @@ for i, svs in enumerate(svs_files):
         seed=None,
     )
     sampler.run()
-    print(f"Sampled {len(sampler.samples)} from {svs}")
-    for (x, y), sample in sampler.samples.items():
-        fp = os.path.basename(svs).split(".")[0]
-        fp = f"svs_{fp}_x{x}_y{y}"
-        fp = os.path.join(samples_dir, f"{fp}.png")
+    t.set_description(f"Sampled {len(sampler.samples)} from {svs}")
+    for i, ((x, y), sample) in enumerate(sampler.samples.items()):
+        wsi_dir = os.path.basename(svs).split(".")[0]
+        wsi_dir = os.path.join(samples_dir, wsi_dir)
+        if not os.path.isdir(wsi_dir):
+            make_dirs(wsi_dir, verbose=True)
+        fp = f"x{x}_y{y}"
+        fp = os.path.join(wsi_dir, f"{fp}.png")
         ToPILImage()(sample).save(fp)
-        print(f"Saved {fp}", end="\r")
+        t.set_description(f"Saved {fp}")
+        num_samples += 1
+
+print(
+    f"Took {time()-start_time: .3f} seconds to sample {num_samples}"
+    f" samples from {len(svs_files)} svs file/s."
+)
