@@ -1,5 +1,5 @@
 """Setup script."""
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 setup(
     name="super_image_resolution",

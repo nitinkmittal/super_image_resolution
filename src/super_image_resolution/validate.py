@@ -19,4 +19,6 @@ def validate_arg_dim(arg: Any, ndim: int):
     Raises ValueError otherwise.
     """
     if arg.ndim != ndim:
-        raise ValueError(f"Expected {ndim}-D {type(arg)}, " f"got {ndim}-D {type(arg)}")
+        raise ValueError(
+            f"Expected {ndim}-D {type(arg)}, " f"got {ndim}-D {type(arg)}"
+        )

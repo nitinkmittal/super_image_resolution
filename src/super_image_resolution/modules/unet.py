@@ -4,7 +4,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
-from .modules import norm2d, activations
+
+from .modules import activations, norm2d
 
 
 class DoubleConv2d(nn.Module):
@@ -43,7 +44,10 @@ class DoubleConv2d(nn.Module):
 
 class UNetEncoder(nn.Module):
     def __init__(
-        self, in_channels: int, norm: str = "identity", activation: str = "relu"
+        self,
+        in_channels: int,
+        norm: str = "identity",
+        activation: str = "relu",
     ):
         super().__init__()
         self.downs = nn.ModuleList()
@@ -57,17 +61,26 @@ class UNetEncoder(nn.Module):
         )
         self.downs.append(
             DoubleConv2d(
-                in_channels=64, out_channels=128, norm=norm, activation=activation
+                in_channels=64,
+                out_channels=128,
+                norm=norm,
+                activation=activation,
             )
         )
         self.downs.append(
             DoubleConv2d(
-                in_channels=128, out_channels=256, norm=norm, activation=activation
+                in_channels=128,
+                out_channels=256,
+                norm=norm,
+                activation=activation,
             )
         )
         self.downs.append(
             DoubleConv2d(
-                in_channels=256, out_channels=512, norm=norm, activation=activation
+                in_channels=256,
+                out_channels=512,
+                norm=norm,
+                activation=activation,
             )
         )
         self.depth = len(self.downs)
@@ -123,16 +136,27 @@ class UNetDecoder(nn.Module):
         self.ups = nn.ModuleList()
         self.ups.append(
             UpSample(
-                in_channels=512, out_channels=256, norm=norm, activation=activation
+                in_channels=512,
+                out_channels=256,
+                norm=norm,
+                activation=activation,
             )
         )
         self.ups.append(
             UpSample(
-                in_channels=256, out_channels=128, norm=norm, activation=activation
+                in_channels=256,
+                out_channels=128,
+                norm=norm,
+                activation=activation,
             )
         )
         self.ups.append(
-            UpSample(in_channels=128, out_channels=64, norm=norm, activation=activation)
+            UpSample(
+                in_channels=128,
+                out_channels=64,
+                norm=norm,
+                activation=activation,
+            )
         )
         self.depth = len(self.ups)
 

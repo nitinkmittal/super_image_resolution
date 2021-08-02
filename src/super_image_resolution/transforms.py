@@ -32,7 +32,9 @@ class CustomResize(object):
 class InvertNormalize(object):
     """Perform invert normalization."""
 
-    def __init__(self, num_channels: int, mean: Sequence[float], std: Sequence[float]):
+    def __init__(
+        self, num_channels: int, mean: Sequence[float], std: Sequence[float]
+    ):
         self.num_channels = num_channels
         self.mean = self._fix_arg(mean)
         self._validate_arg(self.mean)
@@ -53,7 +55,8 @@ class InvertNormalize(object):
         ndim = img.ndim
         if ndim < 3:
             raise ValueError(
-                f"Expected 3 or more dimensional tensor, " f"got {img.ndim} instead"
+                f"Expected 3 or more dimensional tensor, "
+                f"got {img.ndim} instead"
             )
         dim = torch.ones(ndim, dtype=torch.uint8)
         dim[1] = self.num_channels
@@ -62,4 +65,6 @@ class InvertNormalize(object):
         return (img * std) + mean
 
     def __repr__(self):
-        return self.__class__.__name__ + f"(mean: {self.mean}, std: {self.std})"
+        return (
+            self.__class__.__name__ + f"(mean: {self.mean}, std: {self.std})"
+        )

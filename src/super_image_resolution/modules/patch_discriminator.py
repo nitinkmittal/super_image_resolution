@@ -1,8 +1,10 @@
+from copy import deepcopy
+from typing import Tuple, Union
+
 import torch
 from torch import nn
-from typing import Union, Tuple
-from copy import deepcopy
-from .modules import norm2d, activations
+
+from .modules import activations, norm2d
 
 
 def convpatch2d(

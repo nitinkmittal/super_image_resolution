@@ -30,7 +30,8 @@ def split_train_val(
         assert num_train < len(os.listdir(path))
     else:
         raise ValueError(
-            f"Expected num_train to be of type int or float," f"got {type(num_train)}"
+            f"Expected num_train to be of type int or float,"
+            f"got {type(num_train)}"
         )
 
     np.random.seed(seed)
@@ -147,7 +148,8 @@ def dump(fp: str, obj: object, verbose: bool = True):
     try:
         with open(fp, "wb") as f:
             pk.dump(obj, f, protocol=pk.HIGHEST_PROTOCOL)
-        print(f"Successfully saved {fp}")
+        if verbose:
+            print(f"\nSuccessfully saved {fp}\n", end="\r")
     except Exception as e:
         print(f"Error: {e}")
 
@@ -157,10 +159,11 @@ def load(fp: str, verbose: bool = True) -> object:
     try:
         with open(fp, "rb") as f:
             obj = pk.load(f)
-        print(f"Successfully loaded {fp}")
+        if verbose:
+            print(f"\nSuccessfully loaded {fp}\n", end="\r")
+        return obj
     except Exception as e:
         print(f"Error: {e}")
-    return obj
 
 
 def save_output(
@@ -234,3 +237,15 @@ def find_files(path: str, ext: str, recursive: bool = True) -> List[str]:
             abs_paths.append(path)
 
     return list(set(abs_paths))
+
+
+def load_torch_module(
+    module, module_name: str, path: str, verbose: bool = True
+):
+    """Load Torch Module."""
+    try:
+        module.load_state_dict(torch.load(path))
+    except Exception as e:
+        print(f"Exception: {e}")
+    if verbose:
+        print(f"Loaded {module_name} from {path}", end="\r")
