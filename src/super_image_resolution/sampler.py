@@ -1,10 +1,9 @@
 """Contain Sampler to sample from SVS Whole Slide Images."""
-import numpy as np
-import slideio
-
+from abc import ABC, abstractmethod
 from typing import List, Tuple, Union
 
-from abc import ABC, abstractmethod
+import numpy as np
+import slideio
 
 
 class BaseSampleCondition(ABC):
@@ -111,7 +110,9 @@ class RandomSampler:
     ):
         """Validate seed."""
         if self.seed is not None and not isinstance(self.seed, int):
-            raise ValueError(f"Expected seed of int type, got {type(self.seed)}")
+            raise ValueError(
+                f"Expected seed of int type, got {type(self.seed)}"
+            )
 
     def _update_seed(
         self,
@@ -137,7 +138,6 @@ class RandomSampler:
             print(
                 f"Attempt: {num_attempts}/{self.max_attempts}, "
                 f" sample number: {len(self.samples)}/{self.num_samples}",
-                end="\r",
             )
 
     def run(self):
