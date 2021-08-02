@@ -32,6 +32,7 @@ class CustomDataset(Dataset):
     def __len__(self) -> int:
         return len(self.paths)
 
-    def __getitem__(self, idx) -> Tuple[Tensor, Tensor]:
-        img = Image.open(self.paths[idx])
-        return self.in_transforms(img), self.out_transforms(img)
+    def __getitem__(self, idx) -> Tuple[Union[PosixPath, str], Tensor, Tensor]:
+        fp = self.paths[idx]
+        img = Image.open(fp)
+        return fp, self.in_transforms(img), self.out_transforms(img)
