@@ -1,7 +1,6 @@
 from copy import deepcopy
 from typing import Tuple, Union
 
-import torch
 from torch import nn
 
 from .modules import activations, norm2d

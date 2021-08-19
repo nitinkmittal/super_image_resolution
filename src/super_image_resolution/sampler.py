@@ -7,13 +7,15 @@ import slideio
 
 
 class BaseSampleCondition(ABC):
+    """Base class to design sampling condition."""
+
     @abstractmethod
     def __call__(self, img: np.ndarray) -> bool:
         pass
 
 
 class RandomSampler:
-    """Randomly sample patches from SVS file."""
+    """Randomly sample patches from a SVS file."""
 
     def __init__(
         self,
@@ -27,11 +29,12 @@ class RandomSampler:
         verbose: bool = False,
         seed: int = None,
     ):
-
         """
+        Initialize variable for random sampling.
+
         Parameters
         ----------
-        fp: filepath
+        fp: path to svs file
 
         scene_no: scene/tile number to sample from
 
